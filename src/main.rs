@@ -1,19 +1,36 @@
+extern crate log;
+
+use async_std::net::TcpListener;
+use env_logger::Env;
+use futures::StreamExt;
+use log::{error, info};
+
 use crate::movie_client::MovieClient;
-use std::net::TcpListener;
 
 mod movie_client;
 
-fn main() {
-    //TODO: Dynamic config
+#[async_std::main]
+async fn main() -> std::io::Result<()> {
+    env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
+
     let host = "0.0.0.0";
     let port = "23";
     let addr = format!("{}:{}", host, port);
 
-    let listener = TcpListener::bind(&addr).unwrap();
-    println!("Listening on {}", &addr);
+    let listener = TcpListener::bind(&addr).await.unwrap();
+    info!("Listening on {}", &addr);
 
-    while let Ok((stream, sock)) = listener.accept() {
-        println!("Connection from {}", sock.ip());
-        MovieClient::new(stream).begin();
-    }
+    listener
+        .incoming()
+        .for_each_concurrent(None, |stream| async move {
+            match stream {
+                Ok(stream) => {
+                    MovieClient::new(stream).stream().await;
+                }
+                Err(e) => error!("{}", e),
+            }
+        })
+        .await;
+
+    Ok(())
 }
