@@ -1,0 +1,9 @@
+version: '2.4'
+
+services:
+  app:
+    build: .
+    image: gabe565/starwars-telnet-rust
+    ports:
+      - "23:23"
+    restart: on-failure
