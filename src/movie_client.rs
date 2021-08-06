@@ -1,8 +1,9 @@
+use std::time::Duration;
+
 use async_std::net::TcpStream;
 use async_std::task::sleep;
 use futures::AsyncWriteExt;
 use log::info;
-use std::time::Duration;
 use termion::cursor;
 
 const FRAME_HEIGHT: u16 = 13;
@@ -26,14 +27,6 @@ impl MovieClient {
 
     async fn clear(&mut self) -> async_std::io::Result<usize> {
         self.stream.write(format!("{}", termion::clear::All).as_bytes()).await
-    }
-
-    async fn write_at(&mut self, y: u16, text: &'static str) -> std::io::Result<usize> {
-        self.stream.write(
-            format!(
-                "{}{}\n", cursor::Goto(PAD_LEFT, y + PAD_TOP), text
-            ).as_bytes()
-        ).await
     }
 
     async fn log_connect(&mut self) {
@@ -60,20 +53,24 @@ impl MovieClient {
         };
         self.log_connect().await;
         let mut sleep_time: u64 = 0;
+        let mut buffer = Vec::with_capacity(HEIGHT as usize);
         for (i, line) in MOVIE.split("\n").enumerate() {
             match (i as u16) % HEIGHT {
                 0 => sleep_time = line.parse::<u64>().unwrap() * 1000 / 15,
                 curr_line => {
-                    if self.write_at(curr_line, line).await.is_err() {
-                        self.log_disconnect().await;
-                        return;
-                    }
+                    buffer.push(format!(
+                        "{}{}\n",
+                        cursor::Goto(PAD_LEFT, curr_line + PAD_TOP),
+                        line.trim_end(),
+                    ));
                     if curr_line == FRAME_HEIGHT {
-                        sleep(Duration::from_millis(sleep_time)).await;
-                        if self.clear().await.is_err() {
+                        if self.stream.write(buffer.concat().as_bytes()).await.is_err() {
                             self.log_disconnect().await;
                             return;
                         }
+                        buffer.clear();
+                        buffer.push(format!("{}", termion::clear::All));
+                        sleep(Duration::from_millis(sleep_time)).await;
                     }
                 }
             }
