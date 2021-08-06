@@ -25,7 +25,7 @@ async fn main() -> std::io::Result<()> {
         .for_each_concurrent(None, |stream| async move {
             match stream {
                 Ok(stream) => {
-                    MovieClient::new(stream).stream().await;
+                    MovieClient::new(stream).run().await;
                 }
                 Err(e) => error!("{}", e),
             }

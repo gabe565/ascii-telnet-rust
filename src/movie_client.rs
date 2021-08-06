@@ -33,11 +33,8 @@ impl MovieClient {
         self.stream.write(format!("{}", termion::clear::All).as_bytes()).await
     }
 
-    pub async fn stream(&mut self) {
-        if self.clear().await.is_err() {
-            return;
-        };
-        info!("{}", LOG_CONNECT);
+    async fn stream(&mut self) -> async_std::io::Result<()> {
+        self.clear().await?;
         let mut sleep_time: u64 = 0;
         let mut buffer = Vec::with_capacity(HEIGHT as usize);
         for (i, line) in MOVIE.split("\n").enumerate() {
@@ -50,16 +47,22 @@ impl MovieClient {
                         line.trim_end(),
                     ));
                     if curr_line == FRAME_HEIGHT {
-                        if self.stream.write(buffer.concat().as_bytes()).await.is_err() {
-                            info!("{}", LOG_DISCONNECT);
-                            return;
-                        }
+                        self.stream.write(buffer.concat().as_bytes()).await?;
                         buffer.clear();
                         buffer.push(format!("{}", termion::clear::All));
                         sleep(Duration::from_millis(sleep_time)).await;
                     }
                 }
             }
+        }
+        Ok(())
+    }
+
+    pub async fn run(&mut self) {
+        info!("{}", LOG_CONNECT);
+        if self.stream().await.is_err() {
+            info!("{}", LOG_DISCONNECT);
+            return;
         }
         info!("{}", LOG_FINISH);
     }
