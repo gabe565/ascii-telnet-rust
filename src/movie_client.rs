@@ -1,9 +1,10 @@
-use std::time::Duration;
+use std::time::{Duration, SystemTime};
 
 use async_std::net::TcpStream;
 use async_std::task::sleep;
 use futures::AsyncWriteExt;
 use log::info;
+use nanoid::nanoid;
 use termion::cursor;
 
 const FRAME_HEIGHT: u16 = 13;
@@ -14,17 +15,23 @@ const PAD_TOP: u16 = 4;
 
 const MOVIE: &str = include_str!("../movies/sw1.txt");
 
-const LOG_CONNECT: &str = "Client connected";
-const LOG_DISCONNECT: &str = "Client disconnected";
-const LOG_FINISH: &str = "Movie finished";
+macro_rules! client_log {
+    ($id:expr, $text:expr) => {
+        info!("[{}] {}", $id, $text);
+    }
+}
 
 pub struct MovieClient {
+    id: String,
+    connected_at: SystemTime,
     stream: TcpStream,
 }
 
 impl MovieClient {
     pub fn new(stream: TcpStream) -> Self {
         MovieClient {
+            id: nanoid!(8),
+            connected_at: SystemTime::now(),
             stream,
         }
     }
@@ -59,11 +66,16 @@ impl MovieClient {
     }
 
     pub async fn run(&mut self) {
-        info!("{}", LOG_CONNECT);
-        if self.stream().await.is_err() {
-            info!("{}", LOG_DISCONNECT);
-            return;
+        client_log!(self.id, "Connected");
+        let result = self.stream().await;
+        let elapsed = self.connected_at.elapsed().unwrap();
+        match result {
+            Ok(_) => client_log!(
+                self.id, format!("[{:.2}s] Finished", elapsed.as_secs_f32())
+            ),
+            Err(_) => client_log!(
+                self.id, format!("[{:.2}s] Disconnected", elapsed.as_secs_f32())
+            ),
         }
-        info!("{}", LOG_FINISH);
     }
 }
