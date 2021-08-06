@@ -14,6 +14,10 @@ const PAD_TOP: u16 = 4;
 
 const MOVIE: &str = include_str!("../movies/sw1.txt");
 
+const LOG_CONNECT: &str = "Client connected";
+const LOG_DISCONNECT: &str = "Client disconnected";
+const LOG_FINISH: &str = "Movie finished";
+
 pub struct MovieClient {
     stream: TcpStream,
 }
@@ -29,29 +33,11 @@ impl MovieClient {
         self.stream.write(format!("{}", termion::clear::All).as_bytes()).await
     }
 
-    async fn log_connect(&mut self) {
-        if let Ok(sock) = self.stream.local_addr() {
-            info!("Client connected: {}", sock.ip());
-        }
-    }
-
-    async fn log_disconnect(&mut self) {
-        if let Ok(sock) = self.stream.local_addr() {
-            info!("Client disconnected: {}", sock.ip());
-        }
-    }
-
-    async fn log_finish(&mut self) {
-        if let Ok(sock) = self.stream.local_addr() {
-            info!("Movie finished: {}", sock.ip());
-        }
-    }
-
     pub async fn stream(&mut self) {
         if self.clear().await.is_err() {
             return;
         };
-        self.log_connect().await;
+        info!("{}", LOG_CONNECT);
         let mut sleep_time: u64 = 0;
         let mut buffer = Vec::with_capacity(HEIGHT as usize);
         for (i, line) in MOVIE.split("\n").enumerate() {
@@ -65,7 +51,7 @@ impl MovieClient {
                     ));
                     if curr_line == FRAME_HEIGHT {
                         if self.stream.write(buffer.concat().as_bytes()).await.is_err() {
-                            self.log_disconnect().await;
+                            info!("{}", LOG_DISCONNECT);
                             return;
                         }
                         buffer.clear();
@@ -75,6 +61,6 @@ impl MovieClient {
                 }
             }
         }
-        self.log_finish().await;
+        info!("{}", LOG_FINISH);
     }
 }
