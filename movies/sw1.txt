@@ -12,19 +12,19 @@
 
 
 
-45
-                                                                  
+60
                                                                   
   Original Work: Simon Jansen ( http://www.asciimation.co.nz/ )   
   Telnetification                                                 
   & Player     : Martin W. Kirst                                  
                  https://github.com/nitram509/ascii-telnet-server 
                                                                   
+  Rust Port    : Gabe Cook                                        
+                 https://github.com/gabe565/starwars-telnet-rust  
+                                                                  
   The hard work was done by Simon,                                
   I just wrote the telnet player                                  
   and placed it online using Simon's movie sources.               
-                                                                  
-                                                                  
                                                                   
 30
 
@@ -47724,7 +47724,7 @@ ______|___/__][_]___|___________________________/__)(_)____________
       |    | || |   |                           /  |  \
       |    | || |   |                           ~~~~~~~
 ______|___/__][_]___|___________________________/__)(_)____________
-3
+2
 
 
 
@@ -47745,7 +47745,7 @@ ______|___/__][_]___|___________________________/__)(_)____________
 
                          To be continued.
 
-                   Simon Jansen  (C) 1997 - 2008
+                   Simon Jansen  (C) 1997 - 2015
 
                       www.asciimation.co.nz
 
@@ -47753,6 +47753,7 @@ ______|___/__][_]___|___________________________/__)(_)____________
 
 
 1
+
 
 
 
