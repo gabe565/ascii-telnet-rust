@@ -12,6 +12,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "ascii-telnet"
+version = "0.1.0"
+dependencies = [
+ "async-std",
+ "env_logger",
+ "futures",
+ "log",
+ "nanoid",
+ "termion",
+]
+
+[[package]]
 name = "async-attributes"
 version = "1.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -647,18 +659,6 @@ checksum = "765f090f0e423d2b55843402a07915add955e7d60657db13707a159727326cad"
 dependencies = [
  "libc",
  "winapi",
-]
-
-[[package]]
-name = "starwars-telnet-rust"
-version = "0.1.0"
-dependencies = [
- "async-std",
- "env_logger",
- "futures",
- "log",
- "nanoid",
- "termion",
 ]
 
 [[package]]

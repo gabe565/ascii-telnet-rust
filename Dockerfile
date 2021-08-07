@@ -13,6 +13,6 @@ COPY . .
 RUN cargo build --release
 
 FROM debian:stable-slim
-COPY --from=build /app/target/release/starwars-telnet-rust /
+COPY --from=build /app/target/release/ascii-telnet /
 STOPSIGNAL SIGKILL
-CMD ["/starwars-telnet-rust"]
+CMD ["/ascii-telnet"]

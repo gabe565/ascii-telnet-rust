@@ -20,7 +20,7 @@
                  https://github.com/nitram509/ascii-telnet-server 
                                                                   
   Rust Port    : Gabe Cook                                        
-                 https://github.com/gabe565/starwars-telnet-rust  
+                 https://github.com/gabe565/ascii-telnet-rust     
                                                                   
   The hard work was done by Simon,                                
   I just wrote the telnet player                                  
