@@ -14,4 +14,5 @@ RUN cargo build --release
 
 FROM debian:stable-slim
 COPY --from=build /app/target/release/starwars-telnet-rust /
+STOPSIGNAL SIGKILL
 CMD ["/starwars-telnet-rust"]
