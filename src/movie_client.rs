@@ -56,8 +56,8 @@ impl MovieClient {
                     if curr_line == FRAME_HEIGHT {
                         self.stream.write(buffer.concat().as_bytes()).await?;
                         buffer.clear();
-                        buffer.push(format!("{}", termion::clear::All));
                         sleep(Duration::from_millis(sleep_time)).await;
+                        buffer.push(format!("{}", termion::clear::All));
                     }
                 }
             }
