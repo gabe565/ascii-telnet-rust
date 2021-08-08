@@ -1,16 +1,20 @@
-FROM rust:1.54-slim as build
+FROM --platform=$BUILDPLATFORM rust:1.54-slim as sources
 WORKDIR /app
 
 COPY Cargo.* .
 # Empty build for dependency cache
 # https://github.com/rust-lang/cargo/issues/2644
 RUN set -x \
-    && mkdir src \
+    && mkdir -p .cargo src \
     && touch src/lib.rs \
-    && cargo build --release
+    && cargo vendor > .cargo/config
 
+FROM rust:1.54-slim as build
+WORKDIR /app
+
+COPY --from=sources /app /app
 COPY . .
-RUN cargo build --release
+RUN cargo build --release --offline
 
 FROM debian:stable-slim
 COPY --from=build /app/target/release/ascii-telnet /
