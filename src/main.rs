@@ -1,6 +1,7 @@
 extern crate log;
 
-use async_std::net::TcpListener;
+use async_std::net::{TcpListener, TcpStream};
+use async_std::task::spawn;
 use env_logger::Env;
 use futures::StreamExt;
 use log::{error, info};
@@ -25,7 +26,7 @@ async fn main() -> std::io::Result<()> {
         .for_each_concurrent(None, |stream| async move {
             match stream {
                 Ok(stream) => {
-                    MovieClient::new(stream).run().await;
+                    spawn(handle_connection(stream));
                 }
                 Err(e) => error!("{}", e),
             }
@@ -33,4 +34,8 @@ async fn main() -> std::io::Result<()> {
         .await;
 
     Ok(())
+}
+
+async fn handle_connection(mut stream: TcpStream) {
+    MovieClient::new(stream).run().await
 }
