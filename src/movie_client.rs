@@ -37,10 +37,6 @@ impl MovieClient {
         }
     }
 
-    async fn clear(&mut self) -> async_std::io::Result<usize> {
-        self.stream.write(format!("{}", termion::clear::AfterCursor).as_bytes()).await
-    }
-
     fn progress_bar(line_num: usize, total: usize) -> String {
         let percent = (line_num as f32) / (total as f32);
         let whole_width = percent * (WIDTH as f32);
@@ -70,7 +66,6 @@ impl MovieClient {
     }
 
     async fn stream(&mut self) -> async_std::io::Result<()> {
-        self.clear().await?;
         self.stream.write("\n".repeat(PAD_Y as usize).as_bytes()).await?;
         let line_count = MOVIE.split("\n").count();
         let mut sleep_time: u64 = 0;
