@@ -36,6 +36,6 @@ async fn main() -> std::io::Result<()> {
     Ok(())
 }
 
-async fn handle_connection(mut stream: TcpStream) {
+async fn handle_connection(stream: TcpStream) {
     MovieClient::new(stream).run().await
 }
