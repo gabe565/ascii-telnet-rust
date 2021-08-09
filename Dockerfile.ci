@@ -1,0 +1,3 @@
+FROM alpine
+COPY ascii-telnet /usr/local/bin
+CMD ["ascii-telnet"]
