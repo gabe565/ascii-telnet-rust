@@ -13,6 +13,7 @@ FROM rust:1.54-slim as build
 WORKDIR /app
 
 COPY --from=sources /app /app
+RUN cargo build --release --offline
 COPY . .
 RUN cargo build --release --offline
 
