@@ -4,7 +4,7 @@ The original Star Wars telnet server is currently down, so why not implement it 
 
 ## Running
 
-The app supports building locally or in a Docker container at `gabe565/ascii-telnet-rust`.
+The app supports building locally or in a Docker container at `ghcr.io/gabe565/ascii-telnet-rust`.
 
 ### Local
 ```shell
@@ -22,6 +22,6 @@ $ # The will be available in ./target/release.
 
 ### Docker
 ```shell
-$ # An image is available at `gabe565/ascii-telnet-rust`
-$ docker run --rm -it -p '23:23' gabe565/ascii-telnet-rust
+$ # An image is available at `ghcr.io/gabe565/ascii-telnet-rust`
+$ docker run --rm -it -p '23:23' ghcr.io/gabe565/ascii-telnet-rust
 ```
