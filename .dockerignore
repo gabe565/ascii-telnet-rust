@@ -1,5 +1,7 @@
 .dockerignore
 .git/
+.github/
 Dockerfile
+README.md
 docker-compose.yml
 target/

@@ -1,23 +1,44 @@
-FROM --platform=$BUILDPLATFORM rust:1.54-slim as sources
+ARG VERSION=1.54
+
+FROM --platform=$BUILDPLATFORM rust:$VERSION-alpine as build
 WORKDIR /app
+
+RUN apk add \
+        musl-dev
+
+ARG CARGO_TARGET_ARMV7_UNKNOWN_LINUX_MUSLEABIHF_LINKER=/usr/bin/arm-none-eabi-gcc
+ARG CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER=/usr/bin/aarch64-none-elf-gcc
+
+# Convert Docker platform string to Rust target string
+ARG TARGETPLATFORM
+RUN case "$TARGETPLATFORM" in \
+      'linux/amd64') \
+          echo x86_64-unknown-linux-musl >/rust_target \
+          ;; \
+      'linux/arm/v7') \
+          echo armv7-unknown-linux-musleabihf >/rust_target \
+          && apk add gcc-arm-none-eabi \
+          ;; \
+      'linux/arm64') \
+          echo aarch64-unknown-linux-musl >/rust_target \
+          && apk add gcc-aarch64-none-elf \
+          ;; \
+      *) echo "Unsupported target: $TARGETPLATFORM" && exit 1 ;; \
+    esac \
+    && rustup target add "$(cat /rust_target)"
 
 COPY Cargo.* .
 # Empty build for dependency cache
 # https://github.com/rust-lang/cargo/issues/2644
 RUN set -x \
-    && mkdir -p .cargo src \
+    && mkdir -p src \
     && touch src/lib.rs \
-    && cargo vendor > .cargo/config
+    && cargo build --release --target "$(cat /rust_target)"
 
-FROM rust:1.54-slim as build
-WORKDIR /app
-
-COPY --from=sources /app /app
-RUN cargo build --release --offline
 COPY . .
-RUN cargo build --release --offline
+RUN cargo build --release --target "$(cat /rust_target)"
 
-FROM debian:stable-slim
-COPY --from=build /app/target/release/ascii-telnet /
+FROM alpine
+COPY --from=build /app/target/*/release/ascii-telnet /usr/local/bin
 STOPSIGNAL SIGKILL
-CMD ["/ascii-telnet"]
+CMD ["ascii-telnet"]
