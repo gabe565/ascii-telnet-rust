@@ -9,6 +9,7 @@ use log::{error, info};
 use crate::movie_client::MovieClient;
 
 mod movie_client;
+mod movie;
 
 #[async_std::main]
 async fn main() -> std::io::Result<()> {
