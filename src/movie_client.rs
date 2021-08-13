@@ -60,11 +60,12 @@ impl MovieClient {
 
     async fn stream(&mut self) -> async_std::io::Result<()> {
         self.stream.write_all("\n".repeat(movie::PAD_Y as usize).as_bytes()).await?;
-        let mut sleep_time: u64 = 0;
+        let mut this_sleep: u64 = 0;
+        let mut next_sleep: u64 = 0;
         let mut buffer = Vec::with_capacity(movie::HEIGHT as usize);
         for (i, line) in movie::MOVIE_STR.split("\n").enumerate() {
             match (i as u16) % movie::HEIGHT {
-                0 => sleep_time = line.parse::<u64>().unwrap() * 1000 / 15,
+                0 => next_sleep = line.parse::<u64>().unwrap() * 1000 / 15,
                 curr_line => {
                     buffer.push(format!(
                         "{}{}\n",
@@ -75,14 +76,15 @@ impl MovieClient {
                         buffer.push(Self::progress_bar(
                             i, *movie::NUM_LINES
                         ));
+                        sleep(Duration::from_millis(this_sleep)).await;
                         self.stream.write_all(buffer.concat().as_bytes()).await?;
                         buffer.clear();
-                        sleep(Duration::from_millis(sleep_time)).await;
                         buffer.push(format!(
                             "{}{}",
                             termion::cursor::Up(movie::FRAME_HEIGHT + movie::PAD_Y * 2),
                             termion::clear::AfterCursor,
                         ));
+                        this_sleep = next_sleep;
                     }
                 }
             }
