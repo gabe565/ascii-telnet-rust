@@ -59,7 +59,6 @@ impl MovieClient {
     }
 
     async fn stream(&mut self) -> async_std::io::Result<()> {
-        let line_count = movie::MOVIE_STR.split("\n").count();
         self.stream.write_all("\n".repeat(movie::PAD_Y as usize).as_bytes()).await?;
         let mut sleep_time: u64 = 0;
         let mut buffer = Vec::with_capacity(movie::HEIGHT as usize);
@@ -74,7 +73,7 @@ impl MovieClient {
                     ));
                     if curr_line == movie::FRAME_HEIGHT {
                         buffer.push(Self::progress_bar(
-                            i, line_count
+                            i, *movie::NUM_LINES
                         ));
                         self.stream.write_all(buffer.concat().as_bytes()).await?;
                         buffer.clear();
