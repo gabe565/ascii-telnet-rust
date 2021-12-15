@@ -39,6 +39,9 @@ COPY . .
 RUN cargo build --release --target "$(cat /rust_target)"
 
 FROM alpine
+LABEL org.opencontainers.image.authors "Gabe Cook <gabe565@gmail.com>"
+LABEL org.opencontainers.image.source https://github.com/gabe565/ascii-telnet-rust
+
 COPY --from=build /app/target/*/release/ascii-telnet /usr/local/bin
 STOPSIGNAL SIGKILL
 CMD ["ascii-telnet"]
