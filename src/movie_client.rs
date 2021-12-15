@@ -11,7 +11,7 @@ use crate::movie;
 
 macro_rules! client_log {
     ($id:expr, $text:expr) => {
-        info!("[{}] {}", $id, $text);
+        info!("[{}] {}", $id, $text)
     }
 }
 
