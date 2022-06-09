@@ -1,4 +1,4 @@
-ARG VERSION=1.57
+ARG VERSION=1.61
 
 FROM --platform=$BUILDPLATFORM rust:$VERSION-alpine as build
 WORKDIR /app
