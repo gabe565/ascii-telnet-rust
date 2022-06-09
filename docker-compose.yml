@@ -3,7 +3,7 @@ version: '2.4'
 services:
   app:
     build: .
-    image: gabe565/ascii-telnet-rust
+    image: ghcr.io/gabe565/ascii-telnet-rust
     ports:
       - "23:23"
     restart: on-failure
