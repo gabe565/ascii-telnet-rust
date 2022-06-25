@@ -5,21 +5,13 @@ use async_std::net::TcpStream;
 use async_std::task::sleep;
 use futures::AsyncWriteExt;
 use log::info;
-use nanoid::nanoid;
 use termion::color;
 
 use crate::movie;
 
-macro_rules! client_log {
-    ($id:expr, $text:expr) => {
-        info!("[{}] {}", $id, $text)
-    }
-}
-
 pub static mut ACTIVE: u32 = 0;
 
 pub struct MovieClient {
-    id: String,
     connected_at: SystemTime,
     stream: TcpStream,
 }
@@ -27,7 +19,6 @@ pub struct MovieClient {
 impl MovieClient {
     pub fn new(stream: TcpStream) -> Self {
         MovieClient {
-            id: nanoid!(8),
             connected_at: SystemTime::now(),
             stream,
         }
@@ -105,14 +96,10 @@ impl MovieClient {
         let result = self.stream().await;
         let elapsed = self.connected_at.elapsed().unwrap();
         match result {
-            Ok(_) => client_log!(
-                self.id, format!("{} Finished movie", ip)
-            ),
+            Ok(_) => info!("{} Finished movie", ip),
             Err(_) => {}
         }
-        client_log!(
-            self.id, format!("{} Disconnected after {:.2}s", ip, elapsed.as_secs_f32())
-        );
+        info!("{} Disconnected after {:.2}s", ip, elapsed.as_secs_f32());
         unsafe { ACTIVE -= 1; }
     }
 }
