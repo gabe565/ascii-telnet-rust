@@ -16,6 +16,8 @@ macro_rules! client_log {
     }
 }
 
+pub static mut ACTIVE: u32 = 0;
+
 pub struct MovieClient {
     id: String,
     connected_at: SystemTime,
@@ -94,21 +96,23 @@ impl MovieClient {
     }
 
     pub async fn run(&mut self) {
+        unsafe { ACTIVE += 1; }
         let ip;
         match self.stream.peer_addr() {
             Ok(sock) => ip = sock.ip(),
             Err(_) => ip = IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
         }
-        client_log!(self.id, format!("Connection from {}", ip));
         let result = self.stream().await;
         let elapsed = self.connected_at.elapsed().unwrap();
         match result {
             Ok(_) => client_log!(
-                self.id, format!("Success from {} in {:.2}s", ip, elapsed.as_secs_f32())
+                self.id, format!("{} Finished movie", ip)
             ),
-            Err(_) => client_log!(
-                self.id, format!("Disconnect from {} in {:.2}s", ip, elapsed.as_secs_f32())
-            ),
+            Err(_) => {}
         }
+        client_log!(
+            self.id, format!("{} Disconnected after {:.2}s", ip, elapsed.as_secs_f32())
+        );
+        unsafe { ACTIVE -= 1; }
     }
 }

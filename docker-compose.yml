@@ -2,6 +2,7 @@ version: '3.9'
 
 services:
   app:
+    build: .
     image: ghcr.io/gabe565/ascii-telnet-rust
     ports:
       - "23:23"
