@@ -10,8 +10,8 @@ pub fn handle_signals() -> Result<(), Box<dyn Error>> {
             match signal {
                 SIGHUP => {
                     println!("Active connections: {}", movie_client::ACTIVE)
-                },
-                _ => {},
+                }
+                _ => {}
             }
         }
     });

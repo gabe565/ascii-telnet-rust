@@ -77,7 +77,7 @@ impl MovieClient {
                     ));
                     if curr_line == movie::FRAME_HEIGHT {
                         buffer.push(Self::progress_bar(
-                            i, *movie::NUM_LINES
+                            i, *movie::NUM_LINES,
                         ));
                         sleep(Duration::from_millis(this_sleep)).await;
                         self.stream.write_all(buffer.concat().as_bytes()).await?;
