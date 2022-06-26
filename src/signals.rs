@@ -7,10 +7,13 @@ use crate::movie_client;
 pub fn handle_signals() -> anyhow::Result<()> {
     let mut signals = Signals::new(&[SIGHUP])?;
 
-    thread::spawn(move || unsafe {
+    thread::spawn(move || {
         for signal in signals.forever() {
             match signal {
-                SIGHUP => println!("Active connections: {}", movie_client::ACTIVE),
+                SIGHUP => println!(
+                    "Active connections: {}",
+                    unsafe { movie_client::ACTIVE }
+                ),
                 _ => {},
             }
         }
