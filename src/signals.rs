@@ -10,10 +10,8 @@ pub fn handle_signals() -> anyhow::Result<()> {
     thread::spawn(move || unsafe {
         for signal in signals.forever() {
             match signal {
-                SIGHUP => {
-                    println!("Active connections: {}", movie_client::ACTIVE)
-                }
-                _ => {}
+                SIGHUP => println!("Active connections: {}", movie_client::ACTIVE),
+                _ => {},
             }
         }
     });
