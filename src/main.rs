@@ -12,7 +12,7 @@ use crate::movie_client::MovieClient;
 
 mod movie_client;
 mod movie;
-mod signals;
+mod signal_handler;
 
 const DEFAULT_ADDR: &str = "0.0.0.0:23";
 
@@ -20,7 +20,7 @@ const DEFAULT_ADDR: &str = "0.0.0.0:23";
 async fn main() -> anyhow::Result<()> {
     env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
 
-    signals::handle_signals()?;
+    signal_handler::run()?;
 
     let addr = env::args().nth(1).unwrap_or(DEFAULT_ADDR.to_string());
 

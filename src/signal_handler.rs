@@ -5,7 +5,7 @@ use signal_hook::{consts::SIGHUP, iterator::Signals};
 
 use crate::movie_client;
 
-pub fn handle_signals() -> anyhow::Result<()> {
+pub fn run() -> anyhow::Result<()> {
     let mut signals = Signals::new(&[SIGHUP])?;
 
     thread::spawn(move || {
