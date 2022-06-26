@@ -13,16 +13,16 @@ mod movie;
 mod signals;
 
 #[async_std::main]
-async fn main() -> std::io::Result<()> {
+async fn main() -> anyhow::Result<()> {
     env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
 
-    signals::handle_signals().unwrap();
+    signals::handle_signals()?;
 
     let host = "0.0.0.0";
     let port = "23";
     let addr = format!("{}:{}", host, port);
 
-    let listener = TcpListener::bind(&addr).await.unwrap();
+    let listener = TcpListener::bind(&addr).await?;
     info!("Listening on {}", &addr);
 
     listener

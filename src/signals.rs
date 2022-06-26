@@ -1,8 +1,10 @@
+use std::thread;
+
 use signal_hook::{consts::SIGHUP, iterator::Signals};
-use std::{error::Error, thread};
+
 use crate::movie_client;
 
-pub fn handle_signals() -> Result<(), Box<dyn Error>> {
+pub fn handle_signals() -> anyhow::Result<()> {
     let mut signals = Signals::new(&[SIGHUP])?;
 
     thread::spawn(move || unsafe {
