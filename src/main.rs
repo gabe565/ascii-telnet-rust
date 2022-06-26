@@ -1,5 +1,7 @@
 extern crate log;
 
+use std::env;
+
 use async_std::net::{TcpListener, TcpStream};
 use async_std::task::spawn;
 use env_logger::Env;
@@ -12,15 +14,15 @@ mod movie_client;
 mod movie;
 mod signals;
 
+const DEFAULT_ADDR: &str = "0.0.0.0:23";
+
 #[async_std::main]
 async fn main() -> anyhow::Result<()> {
     env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
 
     signals::handle_signals()?;
 
-    let host = "0.0.0.0";
-    let port = "23";
-    let addr = format!("{}:{}", host, port);
+    let addr = env::args().nth(1).unwrap_or(DEFAULT_ADDR.to_string());
 
     let listener = TcpListener::bind(&addr).await?;
     info!("Listening on {}", &addr);
