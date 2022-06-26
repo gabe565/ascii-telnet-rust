@@ -1,4 +1,5 @@
 use std::thread;
+use log::info;
 
 use signal_hook::{consts::SIGHUP, iterator::Signals};
 
@@ -10,7 +11,7 @@ pub fn handle_signals() -> anyhow::Result<()> {
     thread::spawn(move || {
         for signal in signals.forever() {
             match signal {
-                SIGHUP => println!(
+                SIGHUP => info!(
                     "Active connections: {}",
                     unsafe { movie_client::ACTIVE }
                 ),
