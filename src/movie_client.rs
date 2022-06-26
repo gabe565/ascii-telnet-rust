@@ -1,4 +1,3 @@
-use std::net::{IpAddr, Ipv4Addr};
 use std::time::{Duration, SystemTime};
 
 use async_std::net::TcpStream;
@@ -88,11 +87,10 @@ impl MovieClient {
 
     pub async fn run(&mut self) {
         unsafe { ACTIVE += 1; }
-        let ip;
-        match self.stream.peer_addr() {
-            Ok(sock) => ip = sock.ip(),
-            Err(_) => ip = IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
-        }
+        let ip = match self.stream.peer_addr() {
+            Ok(sock) => sock.ip().to_string(),
+            Err(_) => "?".to_string(),
+        };
         let result = self.stream().await;
         let elapsed = self.connected_at.elapsed().unwrap();
         match result {
