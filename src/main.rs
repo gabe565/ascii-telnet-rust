@@ -6,7 +6,7 @@ use async_std::net::{TcpListener, TcpStream};
 use async_std::task::spawn;
 use env_logger::Env;
 use futures::StreamExt;
-use log::{error, info};
+use log::info;
 
 use crate::movie_client::MovieClient;
 
@@ -27,17 +27,10 @@ async fn main() -> anyhow::Result<()> {
     let listener = TcpListener::bind(&addr).await?;
     info!("Listening on {}", &addr);
 
-    listener
-        .incoming()
-        .for_each_concurrent(None, |stream| async move {
-            match stream {
-                Ok(stream) => {
-                    spawn(handle_connection(stream));
-                }
-                Err(e) => error!("{}", e),
-            }
-        })
-        .await;
+    let mut incoming = listener.incoming();
+    while let Some(stream) = incoming.next().await {
+        spawn(handle_connection(stream?));
+    }
 
     Ok(())
 }
