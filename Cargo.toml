@@ -15,5 +15,5 @@ signal-hook = "0.3.14"
 anyhow = "1.0.58"
 
 [dependencies.async-std]
-version = "1.9"
+version = "1.12"
 features = ["attributes"]
