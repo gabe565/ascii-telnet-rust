@@ -1,9 +1,7 @@
 ARG VERSION=1.63
 
-FROM rust:$VERSION-alpine as build
+FROM rust:$VERSION as build
 WORKDIR /app
-
-RUN apk add --no-cache musl-dev
 
 COPY Cargo.* .
 # Empty build for dependency cache
@@ -16,7 +14,7 @@ RUN set -x \
 COPY . .
 RUN cargo build --release
 
-FROM alpine
+FROM debian:buster-slim
 LABEL org.opencontainers.image.authors="Gabe Cook <gabe565@gmail.com>"
 LABEL org.opencontainers.image.source="https://github.com/gabe565/ascii-telnet-rust"
 
@@ -25,8 +23,8 @@ COPY --from=build /app/target/release/ascii-telnet /usr/local/bin
 ARG USERNAME=ascii-telnet
 ARG UID=1000
 ARG GID=$UID
-RUN addgroup -g "$GID" "$USERNAME" \
-    && adduser -S -u "$UID" -G "$USERNAME" "$USERNAME"
+RUN groupadd --gid "$GID" "$USERNAME" \
+    && useradd --uid "$UID" --gid "$GID" -m "$USERNAME"
 USER $UID
 
 CMD ["ascii-telnet"]
