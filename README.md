@@ -1,7 +1,7 @@
 # ascii-telnet-rust
 
 [![Build](https://github.com/gabe565/ascii-telnet-rust/actions/workflows/docker.yml/badge.svg)](https://github.com/gabe565/ascii-telnet-rust/actions/workflows/docker.yml)
-[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/gabe565)](https://artifacthub.io/packages/helm/gabe565/ascii-telnet-rust)
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/gabe565)](https://artifacthub.io/packages/helm/gabe565/ascii-telnet)
 
 The original Star Wars telnet server is currently down, so why not implement it in Rust? This server will open a TCP server on `0.0.0.0:23` which streams the original Star Wars ASCII movie over telnet.
 
@@ -37,5 +37,5 @@ $ docker run --rm -it -p '23:23' ghcr.io/gabe565/ascii-telnet-rust
 
 A Helm chart is available for Kubernetes deployment.
 For more information, go to
-[Artifact Hub](https://artifacthub.io/packages/helm/gabe565/ascii-telnet-rust) or
-[gabe565/charts](https://github.com/gabe565/charts/tree/main/charts/ascii-telnet-rust).
+[Artifact Hub](https://artifacthub.io/packages/helm/gabe565/ascii-telnet) or
+[gabe565/charts](https://github.com/gabe565/charts/tree/main/charts/ascii-telnet).
