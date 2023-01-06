@@ -1,4 +1,4 @@
-FROM rust:1.63 as build
+FROM rust:1.66 as build
 WORKDIR /app
 
 COPY Cargo.* .
