@@ -1,6 +1,4 @@
-ARG VERSION=1.63
-
-FROM rust:$VERSION as build
+FROM rust:1.63 as build
 WORKDIR /app
 
 COPY Cargo.* .
