@@ -1,8 +1,7 @@
 name: Docker Build
 
 on:
-  push:
-    branches: main
+  push: {}
 
 env:
   image: gabe565/ascii-telnet-rust
