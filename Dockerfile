@@ -1,6 +1,10 @@
 FROM rust:1.67 as build
 WORKDIR /app
 
+# Fix multiplatform build memory issues
+# https://github.com/docker/build-push-action/issues/621#issuecomment-1383624173
+ARG CARGO_NET_GIT_FETCH_WITH_CLI=true
+
 COPY Cargo.* .
 # Empty build for dependency cache
 # https://github.com/rust-lang/cargo/issues/2644
