@@ -16,7 +16,8 @@ RUN set -x \
 COPY . .
 RUN cargo build --release
 
-FROM debian:buster-slim
+
+FROM debian:stable-slim
 
 COPY --from=build /app/target/release/ascii-telnet /usr/local/bin
 
