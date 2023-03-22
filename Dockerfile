@@ -17,8 +17,6 @@ COPY . .
 RUN cargo build --release
 
 FROM debian:buster-slim
-LABEL org.opencontainers.image.authors="Gabe Cook <gabe565@gmail.com>"
-LABEL org.opencontainers.image.source="https://github.com/gabe565/ascii-telnet-rust"
 
 COPY --from=build /app/target/release/ascii-telnet /usr/local/bin
 
