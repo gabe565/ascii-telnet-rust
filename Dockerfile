@@ -1,11 +1,20 @@
-FROM rust:1.67 as build
+FROM --platform=$BUILDPLATFORM rust:1.67 as dependencies
 WORKDIR /app
 
-# Fix multiplatform build memory issues
-# https://github.com/docker/build-push-action/issues/621#issuecomment-1383624173
+# Improves dependency download speed
 ARG CARGO_NET_GIT_FETCH_WITH_CLI=true
 
 COPY Cargo.* .
+RUN mkdir .cargo src \
+    && touch src/lib.rs
+RUN cargo vendor > .cargo/config.toml
+
+
+FROM rust:1.67 as build
+WORKDIR /app
+
+COPY --from=dependencies /app .
+
 # Empty build for dependency cache
 # https://github.com/rust-lang/cargo/issues/2644
 RUN set -x \
