@@ -41,8 +41,6 @@ $ docker run --rm -it -p '23:23' ghcr.io/gabe565/ascii-telnet-rust
 ```
 
 ### Kubernetes
-
-A Helm chart is available for Kubernetes deployment.
-For more information, go to
-[Artifact Hub](https://artifacthub.io/packages/helm/gabe565/ascii-telnet) or
-[gabe565/charts](https://github.com/gabe565/charts/tree/main/charts/ascii-telnet).
+A Helm chart is available for Kubernetes deployments.
+See [charts.gabe565.com](https://charts.gabe565.com/charts/ascii-movie/) or
+[gabe565/charts](https://github.com/gabe565/charts/tree/main/charts/ascii-movie) for details.
