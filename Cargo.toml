@@ -12,7 +12,7 @@ log = "0.4"
 env_logger = "0.10"
 once_cell = "1.17.1"
 signal-hook = "0.3.15"
-anyhow = "1.0.70"
+anyhow = "1.0.71"
 
 [dependencies.async-std]
 version = "1.12"
