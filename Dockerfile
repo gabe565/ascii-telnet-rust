@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM rust:1.75 as dependencies
+FROM --platform=$BUILDPLATFORM rust:1.79 as dependencies
 WORKDIR /app
 
 # Improves dependency download speed
@@ -10,7 +10,7 @@ RUN mkdir .cargo src \
 RUN cargo vendor > .cargo/config.toml
 
 
-FROM rust:1.75 as build
+FROM rust:1.79 as build
 WORKDIR /app
 
 COPY --from=dependencies /app .
