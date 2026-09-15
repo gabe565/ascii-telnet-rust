@@ -31,7 +31,7 @@ jobs:
           sudo mount -t tmpfs -o size=10G none /var/lib/docker
           sudo systemctl restart docker
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
       - name: Set up Buildx
         uses: docker/setup-buildx-action@v3
       - name: Login to GitHub Container Registry
